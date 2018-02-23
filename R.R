@@ -13,10 +13,37 @@ library(dplyr)
 # For example, running this (by clicking run or pressing Shift+Enter) will list the files in the input directory
 # Load CSV files
 cat("Read data")
-df_train <- fread('data/train.csv', sep=",", na.strings = "NA")
-df_test  <- fread("data/test.csv" , sep=",", na.strings = "NA")
+d_train <- fread('data/train.csv', sep=",", na.strings = "NA")
+d_test  <- fread("data/test.csv" , sep=",", na.strings = "NA")
+
+print(sapply(d_train,class))
+
+#fonction pour le calcul du taux d'erreur
+err_rate <-  function(D,prediction){
+    #matrice de confusion
+    mc <- table(D$chiffre,prediction)
+    #taux d'erreur
+    #1 -  somme(individus classés correctement) / somme totale individus
+      err <-1-sum(diag(mc))/sum(mc)
+      print(paste("Error rate :",round(100*err,2),"%"))
+    }
+#rpart library
+library(rpart)
+m.tree <-rpart(y ~ ., data = d_train)
+print(m.tree)
+
+#variable importance
+print(m.tree$variable.importance)
+#X0      X314      X261      X127        X2      X313      X136      X232      X263 
+#338082.06 281461.26 273561.14 271237.57 146694.45 144680.69  43648.17  43648.17  43648.17 
+#X29       X54       X76      X118      X119      X311      X115      X275 
+#43648.17  43648.17  43648.17  37553.06  37553.06  32244.80  31567.16  24000.
+
+#onpeut voir les varibles les plus importantes pour la prediction
 
 
+
+##############################################"
 data = rbind(df_train,df_test,fill=T)
 
 features = colnames(data)
