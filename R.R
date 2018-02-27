@@ -41,9 +41,24 @@ print(m.tree$variable.importance)
 
 #onpeut voir les varibles les plus importantes pour la prediction
 
+#calcule des ecart type
+sapply(d_train[,11:378],sd)#comme les 8 premiere variable sont des factors alors nous allons les enlever 
 
+#prédiction
+y.tree <-  predict(m.tree, newdata = d_test, type = "class")
 
-##############################################"
+model_reglin=lm(y~.,data = d_train[,11:378])
+summary(model_reglin)
+attach(d_train)
+X0<-ifelse(X0)
+
+y_pred=predict(model_reglin, d_test[,10:377], se.fit = FALSE, scale = NULL, df = Inf,
+        interval = c("none", "confidence", "prediction"),
+        level = 0.95, type = c("response", "terms"))
+err=d_train[,2]-y_pred
+mean(err)
+##############################################
+##############################################
 data = rbind(df_train,df_test,fill=T)
 
 features = colnames(data)
